@@ -1,0 +1,37 @@
+name: update
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -CeEuo pipefail {0}
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: build
+        run: |
+
+            zip -r . test.zip .
+
+      - name: Upload test.zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: test
+          path: test.zip
